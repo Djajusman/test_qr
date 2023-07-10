@@ -185,15 +185,15 @@ class _QRViewExampleState extends State<QRViewExample> {
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController controller) async {
     setState(() {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) async {
-      setState(() {
+      setState(() async {
         debugPrint("scanned");
         result = scanData;
-        postAchievement(result!.code ?? "No Data");
+        await postAchievement(result!.code ?? "No Data");
       });
       // // Connect to Odoo and insert a record
       // UserLoggedIn user =

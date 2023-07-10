@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 Future postAchievement(String data) async {
@@ -19,9 +20,10 @@ Future postAchievement(String data) async {
     Uri url = Uri.parse(uri);
     http.Response response =
         await client.post(url, headers: headers, body: jsonEncode(body));
-    return response;
+    Get.snackbar(data, jsonDecode(response.body));
+    // return response;
   } catch (e) {
-    // Get.snackbar("Error", e.toString());
+    Get.snackbar("Error", e.toString());
     debugPrint(e.toString());
     rethrow;
   }
@@ -45,9 +47,11 @@ Future getToken() async {
     Uri url = Uri.parse(uri);
     http.Response response =
         await client.post(url, headers: headers, body: jsonEncode(body));
-    return jsonDecode(response.body)["result"]["ocn_token_key"];
+    var data = jsonDecode(response.body);
+    Get.snackbar("Response", data["result"]["ocn_token_key"]);
+    return data["result"]["ocn_token_key"];
   } catch (e) {
-    // Get.snackbar("Error", e.toString());
+    Get.snackbar("Error", e.toString());
     debugPrint(e.toString());
     rethrow;
   }
