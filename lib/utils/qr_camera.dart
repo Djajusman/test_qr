@@ -56,6 +56,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                         child: ElevatedButton(
                             onPressed: () async {
                               await controller?.toggleFlash();
+                              await postAchievement(result!.code ?? "No Data");
                               setState(() {});
                             },
                             style: ButtonStyle(
@@ -175,6 +176,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
+      cameraFacing: CameraFacing.back,
       overlay: QrScannerOverlayShape(
           borderColor: Colors.red,
           borderRadius: 10,
@@ -185,16 +187,18 @@ class _QRViewExampleState extends State<QRViewExample> {
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void _onQRViewCreated(QRViewController controller) async {
     setState(() {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) async {
       setState(() {
-        debugPrint("scanned");
         result = scanData;
-        postAchievement(result!.code ?? "No Data");
       });
+      // print(result!.code.toString());
+      await controller.pauseCamera();
+      // await postAchievement(result!.code ?? "No Data");
+      await controller.resumeCamera();
       // // Connect to Odoo and insert a record
       // UserLoggedIn user =
       //     await odoo.connect(Credential("ridwan@enviu.org", "Pl@stics123"));
