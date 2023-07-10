@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:odoo/odoo.dart';
+import 'package:test_qr/services/api.dart';
 
 import 'utils/qr_camera.dart';
 
@@ -21,7 +22,9 @@ class MyHome extends StatelessWidget {
       // backgroundColor: Color.fromRGBO(101, 74, 94, 1),
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
+            // await postAchievement("data");
+            // await getToken();
             Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => const QRViewExample(),
             ));

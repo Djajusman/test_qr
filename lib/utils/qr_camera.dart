@@ -15,6 +15,7 @@ class QRViewExample extends StatefulWidget {
 
 class _QRViewExampleState extends State<QRViewExample> {
   Barcode? result;
+  String statusData = "";
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
@@ -43,8 +44,9 @@ class _QRViewExampleState extends State<QRViewExample> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   if (result != null)
-                    Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+                    // Text(
+                    //     'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+                    Text(statusData)
                   else
                     const Text('Scan a code'),
                   Row(
@@ -56,7 +58,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                         child: ElevatedButton(
                             onPressed: () async {
                               await controller?.toggleFlash();
-                              await postAchievement(result!.code ?? "No Data");
+                              // await postAchievement(result!.code ?? "No Data");
                               setState(() {});
                             },
                             style: ButtonStyle(
@@ -191,13 +193,17 @@ class _QRViewExampleState extends State<QRViewExample> {
     setState(() {
       this.controller = controller;
     });
+    await controller.resumeCamera();
     controller.scannedDataStream.listen((scanData) async {
       setState(() {
         result = scanData;
       });
       // print(result!.code.toString());
       await controller.pauseCamera();
-      // await postAchievement(result!.code ?? "No Data");
+      var responString = await postAchievement(result!.code ?? "No Data");
+      setState(() {
+        statusData = responString;
+      });
       await controller.resumeCamera();
       // // Connect to Odoo and insert a record
       // UserLoggedIn user =
